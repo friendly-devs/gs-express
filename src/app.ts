@@ -1,11 +1,16 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
+import { createConnection } from 'typeorm';
+import routers from './routers';
 
-const app = express();
+createConnection()
+  .then((connection) => {
+    const app = express();
+    const port = process.env.PORT || 8080;
 
-app.get('/', (req, res) => {
-  res.send('Hello cc');
-});
+    app.use(routers);
 
-app.listen(8080, () => {
-  console.log('App started in port 8080');
-});
+    app.listen(port, () => {
+      console.log(`App started in port ${port}`);
+    });
+  })
+  .catch((error) => console.log(error));
